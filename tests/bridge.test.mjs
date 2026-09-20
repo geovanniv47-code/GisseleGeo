@@ -11,8 +11,8 @@ test('public app files exist and never use localStorage for WaveSpeed', async()=
 test('server bridge has a fixed model allowlist and no WaveSpeed env key', async()=>{
   const { readFile } = await import('node:fs/promises');
   const bridge = await readFile(new URL('../netlify/functions/wavespeed-bridge.mjs', import.meta.url),'utf8');
-  assert.match(bridge,/seedream-v5\.0-pro\/edit/);
-  assert.match(bridge,/seedance-2\.5\/image-to-video/);
+  assert.match(bridge,/seedream-v4\/edit/);
+  assert.match(bridge,/seedance-2\.0-fast\/image-to-video/);
   assert.doesNotMatch(bridge,/process\.env\.WAVESPEED/);
   assert.doesNotMatch(bridge,/console\./);
 });

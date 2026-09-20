@@ -10,3 +10,5 @@
 @media(max-width:480px){.brand{font-size:1.75rem}.header-actions{gap:5px}.chip-button{padding:7px 8px}.studio-shell,.admin-shell{width:min(100% - 18px,1180px);padding-top:22px}.generator-card,.result-card,.history-card,.admin-table-card{padding:16px;border-radius:18px}.mode-option{padding:10px 8px;gap:7px}.mode-icon{width:30px;height:30px}.settings-grid{grid-template-columns:1fr}.result-card{min-height:360px}.empty-result{min-height:250px}.status-pill{font-size:.67rem}.form-row{align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
 .form-row.align-end{justify-content:flex-end}
+.video-cost{margin:-6px 0 12px;color:#bff5ff;font-size:.76rem;text-align:right}
+.model-summary{min-height:44px;padding:9px 12px;border:1px solid rgba(123,170,217,.18);border-radius:12px;background:rgba(3,9,25,.55)}.model-summary span,.model-summary strong{display:block}.model-summary span{color:var(--muted);font-size:.68rem}.model-summary strong{margin-top:3px;color:#bff5ff;font-size:.78rem}

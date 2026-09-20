@@ -1,7 +1,7 @@
 import { verifyUser } from './_auth.mjs';
 
 const API_BASE = 'https://api.wavespeed.ai/api/v3';
-const MODELS = { edit:'bytedance/seedream-v5.0-pro/edit', video:'bytedance/seedance-2.5/image-to-video' };
+const MODELS = { edit:'bytedance/seedream-v4/edit', video:'bytedance/seedance-2.0-fast/image-to-video' };
 const FAILURE = new Set(['failed','cancelled','timeout','deleted']);
 const json=(data,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
 const safeError=async response=>{const body=await response.json().catch(()=>null);return body?.message||body?.error||`WaveSpeed respondió con error ${response.status}.`;};
@@ -50,8 +50,8 @@ export default async (request) => {
       const mode=body.mode; if(!MODELS[mode])return json({error:'Modo no permitido.'},400); const prompt=String(body.prompt||'').trim(); const imageUrl=String(body.imageUrl||'');
       if(!prompt||prompt.length>5000)return json({error:'El prompt debe tener entre 1 y 5000 caracteres.'},400); if(!imageUrl.startsWith('https://'))return json({error:'Falta una imagen de referencia válida.'},400);
       let payload;
-      if(mode==='edit')payload={prompt,images:[imageUrl],resolution:['1k','1.5k','2k'].includes(body.resolution)?body.resolution:'1.5k',output_format:'jpeg',prompt_optimization_mode:'standard',...(body.aspectRatio?{aspect_ratio:body.aspectRatio}:{})};
-      else payload={prompt,image:imageUrl,resolution:'720p',duration:[5,8,10].includes(Number(body.duration))?Number(body.duration):5,generate_audio:true};
+      if(mode==='edit')payload={prompt,images:[imageUrl]};
+      else payload={prompt,image:imageUrl,resolution:['480p','720p'].includes(body.resolution)?body.resolution:'480p',duration:[5,8,10].includes(Number(body.duration))?Number(body.duration):5,enable_web_search:false,generate_audio:true};
       const response=await fetch(`${API_BASE}/${MODELS[mode]}`,{method:'POST',headers,body:JSON.stringify(payload)}); if(!response.ok)return json({error:await safeError(response)},response.status);
       const data=(await response.json()).data; if(!data?.id)return json({error:'WaveSpeed no devolvió un identificador de tarea.'},502); return json({id:data.id,status:data.status||'created'});
     }

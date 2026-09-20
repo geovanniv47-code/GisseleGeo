@@ -8,6 +8,11 @@ const keyInput=$('#api-key'), promptInput=$('#prompt'), fileInput=$('#reference-
 function setMessage(text='', type=''){ message.textContent=text; message.className=`message ${type}`; }
 function validate(){ const ready=keyInput.value.trim() && promptInput.value.trim() && state.file && !state.busy; generateButton.disabled=!ready; }
 function setBusy(active,label='Generando…'){ state.busy=active; generateButton.classList.toggle('loading',active); generateButton.querySelector('.button-label').textContent=active?label:'Generar'; validate(); }
+function updateVideoCost(){
+  const duration=Number($('#duration').value); const resolution=$('#video-quality').value;
+  const cost=(duration*(resolution==='720p'?0.20:0.10)).toFixed(2);
+  $('#video-cost').textContent=`Costo estimado: US$${cost}`;
+}
 function saveHistory(){ state.history=state.history.slice(0,8); sessionStorage.setItem('gisselegeo-history',JSON.stringify(state.history)); renderHistory(); }
 function escapeHtml(value){ return String(value).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
 function outputUrl(output){ if(typeof output==='string') return output; return output?.url || output?.uri || output?.video || output?.image || ''; }
@@ -58,7 +63,8 @@ function useFile(file){
   state.file=file; if(state.previewUrl) URL.revokeObjectURL(state.previewUrl); state.previewUrl=URL.createObjectURL(file); $('#image-preview').src=state.previewUrl; $('#image-preview').classList.remove('hidden'); $('#remove-image').classList.remove('hidden'); validate();
 }
 
-document.querySelectorAll('.mode-option').forEach(button=>button.addEventListener('click',()=>{ state.mode=button.dataset.mode; document.querySelectorAll('.mode-option').forEach(item=>{const active=item===button;item.classList.toggle('active',active);item.setAttribute('aria-checked',String(active));}); $('#ratio-field').classList.toggle('hidden',state.mode==='video'); $('#duration-field').classList.toggle('hidden',state.mode!=='video'); promptInput.placeholder=state.mode==='video'?'Describe el movimiento, la cámara y la acción del video…':'Describe exactamente qué deseas cambiar y qué debe conservarse…'; validate(); }));
+document.querySelectorAll('.mode-option').forEach(button=>button.addEventListener('click',()=>{ state.mode=button.dataset.mode; document.querySelectorAll('.mode-option').forEach(item=>{const active=item===button;item.classList.toggle('active',active);item.setAttribute('aria-checked',String(active));}); const video=state.mode==='video'; $('#image-model-field').classList.toggle('hidden',video); $('#video-quality-field').classList.toggle('hidden',!video); $('#duration-field').classList.toggle('hidden',!video); $('#video-cost').classList.toggle('hidden',!video); promptInput.placeholder=video?'Describe el movimiento, la cámara y la acción del video…':'Describe exactamente qué deseas cambiar y qué debe conservarse…'; updateVideoCost(); validate(); }));
+$('#duration').addEventListener('change',updateVideoCost); $('#video-quality').addEventListener('change',updateVideoCost);
 keyInput.value=sessionStorage.getItem('gisselegeo-wavespeed-key') || ''; keyInput.addEventListener('input',()=>{sessionStorage.setItem('gisselegeo-wavespeed-key',keyInput.value);validate();}); promptInput.addEventListener('input',()=>{$('#prompt-count').textContent=`${promptInput.value.length} / 5000`;validate();});
 $('#toggle-key').addEventListener('click',e=>{const show=keyInput.type==='password';keyInput.type=show?'text':'password';e.currentTarget.textContent=show?'Ocultar':'Ver';});
 fileInput.addEventListener('change',()=>useFile(fileInput.files[0])); ['dragenter','dragover'].forEach(name=>$('#dropzone').addEventListener(name,e=>{e.preventDefault();$('#dropzone').classList.add('dragover')})); ['dragleave','drop'].forEach(name=>$('#dropzone').addEventListener(name,e=>{e.preventDefault();$('#dropzone').classList.remove('dragover')})); $('#dropzone').addEventListener('drop',e=>useFile(e.dataTransfer.files[0]));
@@ -69,7 +75,7 @@ generateButton.addEventListener('click',async()=>{
   if(generateButton.disabled)return; setMessage(); $('#result-status').textContent='Preparando'; $('#result-status').className='status-pill muted'; setBusy(true);
   try{
     const imageUrl=await uploadReference(state.file); setBusy(true,'Enviando tarea…'); setMessage('Imagen lista. Enviando la generación a WaveSpeed…');
-    const payload=state.mode==='edit'?{mode:'edit',prompt:promptInput.value.trim(),imageUrl,aspectRatio:$('#aspect-ratio').value,resolution:$('#quality').value}:{mode:'video',prompt:promptInput.value.trim(),imageUrl,duration:Number($('#duration').value),resolution:'720p'};
+    const payload=state.mode==='edit'?{mode:'edit',prompt:promptInput.value.trim(),imageUrl}:{mode:'video',prompt:promptInput.value.trim(),imageUrl,duration:Number($('#duration').value),resolution:$('#video-quality').value};
     const submitted=await api('submit',payload); setBusy(true,'Procesando…'); setMessage(state.mode==='video'?'Creando el video; puede tomar varios minutos…':'Editando la imagen…');
     const result=await poll(submitted.id); const url=outputUrl(result.outputs?.[0]); if(!url) throw new Error('WaveSpeed terminó, pero no devolvió un archivo utilizable.'); showResult(url,state.mode,promptInput.value.trim()); setMessage('Generación completada.','success');
   }catch(error){ setMessage(error.message || 'No se pudo generar.','error'); $('#result-status').textContent='Error'; }

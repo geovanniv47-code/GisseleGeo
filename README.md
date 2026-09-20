@@ -1,6 +1,6 @@
 # GisseleGeo
 
-Web app móvil de edición de imágenes con Seedream 5 Pro y generación de video con Seedance 2.5 mediante WaveSpeedAI.
+Web app móvil de edición de imágenes con Seedream 4.0 y generación de video con Seedance 2.0 Fast mediante WaveSpeedAI.
 
 ## Qué incluye
 

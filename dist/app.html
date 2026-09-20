@@ -53,10 +53,10 @@
 
           <div class="mode-toggle" role="radiogroup" aria-label="Modo de creación">
             <button class="mode-option active" data-mode="edit" role="radio" aria-checked="true" type="button">
-              <span class="mode-icon">✦</span><span><strong>Editar imagen</strong><small>Seedream 5 Pro</small></span>
+              <span class="mode-icon">✦</span><span><strong>Editar imagen</strong><small>Seedream 4.0</small></span>
             </button>
             <button class="mode-option" data-mode="video" role="radio" aria-checked="false" type="button">
-              <span class="mode-icon">▶</span><span><strong>Generar video</strong><small>Seedance 2.5</small></span>
+              <span class="mode-icon">▶</span><span><strong>Generar video</strong><small>Seedance 2.0 Fast</small></span>
             </button>
           </div>
 
@@ -71,16 +71,17 @@
             <input id="reference-image" type="file" accept="image/jpeg,image/png,image/webp" />
             <span class="upload-orb">＋</span>
             <strong>Sube una imagen</strong>
-            <small>JPG, PNG o WEBP · máximo 20 MB</small>
+            <small>JPG, PNG o WEBP · máximo 5 MB</small>
             <img id="image-preview" class="hidden" alt="Vista previa de la imagen de referencia" />
             <button id="remove-image" class="remove-file hidden" type="button">Quitar</button>
           </label>
 
           <div class="settings-grid">
-            <label><span>Calidad</span><select id="quality"><option value="1k">1K · rápida</option><option value="1.5k" selected>1.5K · equilibrada</option><option value="2k">2K · máxima</option></select></label>
-            <label id="ratio-field"><span>Formato</span><select id="aspect-ratio"><option value="">Original</option><option value="1:1">1:1</option><option value="4:5">4:5</option><option value="9:16" selected>9:16</option><option value="16:9">16:9</option></select></label>
+            <div id="image-model-field" class="model-summary"><span>Modelo de imagen</span><strong>Seedream 4.0 · US$0.027</strong></div>
+            <label id="video-quality-field" class="hidden"><span>Calidad de video</span><select id="video-quality"><option value="480p" selected>480p · económica</option><option value="720p">720p · equilibrada</option></select></label>
             <label id="duration-field" class="hidden"><span>Duración</span><select id="duration"><option value="5">5 segundos</option><option value="8">8 segundos</option><option value="10">10 segundos</option></select></label>
           </div>
+          <p id="video-cost" class="video-cost hidden">Costo estimado: US$0.50</p>
 
           <button id="generate" class="button primary-button generate-button" type="button" disabled>
             <span class="button-label">Generar</span><span class="spinner" aria-hidden="true"></span>
