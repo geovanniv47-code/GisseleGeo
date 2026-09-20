@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#050816" />
+    <meta name="description" content="Accede a GisseleGeo, tu estudio neón para edición de imágenes y generación de video con IA." />
+    <title>Acceso · GisseleGeo</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="auth-body">
+    <canvas class="starfield" aria-hidden="true"></canvas>
+    <div class="nebula" aria-hidden="true"></div>
+
+    <main class="auth-shell">
+      <section class="auth-visual" aria-label="Estudio creativo con inteligencia artificial">
+        <img src="/assets/login-creative.webp" width="960" height="1200" alt="Creadora trabajando con herramientas futuristas de edición de fotos y video" />
+        <div class="visual-overlay">
+          <a class="brand brand-large" href="/" aria-label="GisseleGeo inicio">GisseleGeo</a>
+          <p>Convierte una imagen en algo extraordinario.</p>
+        </div>
+      </section>
+
+      <section class="auth-panel glass-card neon-border" aria-labelledby="auth-title">
+        <div class="mobile-brand">
+          <span class="brand">GisseleGeo</span>
+          <span class="status-pill"><i></i> Estudio IA</span>
+        </div>
+        <div class="auth-copy">
+          <p class="eyebrow">Tu espacio creativo</p>
+          <h1 id="auth-title">Bienvenido de nuevo</h1>
+          <p>Entra para editar imágenes y darles movimiento desde tu celular.</p>
+        </div>
+
+        <button id="google-login" class="button google-button" type="button">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path fill="#4285F4" d="M21.6 12.23c0-.71-.06-1.4-.18-2.06H12v3.9h5.39a4.61 4.61 0 0 1-2 3.02v2.53h3.24c1.9-1.75 2.97-4.33 2.97-7.39Z"/><path fill="#34A853" d="M12 22c2.7 0 4.97-.9 6.63-2.38l-3.24-2.53c-.9.6-2.05.96-3.39.96-2.6 0-4.81-1.76-5.6-4.13H3.05v2.61A10 10 0 0 0 12 22Z"/><path fill="#FBBC05" d="M6.4 13.92A6.02 6.02 0 0 1 6.09 12c0-.67.11-1.32.31-1.92V7.47H3.05A10 10 0 0 0 2 12c0 1.61.38 3.14 1.05 4.53l3.35-2.61Z"/><path fill="#EA4335" d="M12 5.95c1.47 0 2.79.5 3.82 1.49l2.88-2.88A9.66 9.66 0 0 0 12 2a10 10 0 0 0-8.95 5.47l3.35 2.61c.79-2.37 3-4.13 5.6-4.13Z"/></svg>
+          Continuar con Google
+        </button>
+
+        <div class="divider"><span>o usa tu email</span></div>
+
+        <div class="auth-tabs" role="tablist" aria-label="Tipo de acceso">
+          <button class="auth-tab active" id="signin-tab" role="tab" aria-selected="true" type="button">Iniciar sesión</button>
+          <button class="auth-tab" id="signup-tab" role="tab" aria-selected="false" type="button">Crear cuenta</button>
+        </div>
+
+        <form id="auth-form" novalidate>
+          <label class="field-label" for="email">Correo electrónico</label>
+          <div class="input-wrap">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg>
+            <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="tu@correo.com" required />
+          </div>
+
+          <label class="field-label" for="password">Contraseña</label>
+          <div class="input-wrap">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <input id="password" name="password" type="password" autocomplete="current-password" minlength="6" placeholder="Mínimo 6 caracteres" required />
+            <button id="toggle-password" class="icon-button" type="button" aria-label="Mostrar contraseña">Ver</button>
+          </div>
+
+          <div class="form-row align-end">
+            <button id="forgot-password" class="text-button" type="button">Olvidé mi contraseña</button>
+          </div>
+
+          <button id="email-submit" class="button primary-button" type="submit">
+            <span class="button-label">Entrar</span><span class="spinner" aria-hidden="true"></span>
+          </button>
+        </form>
+
+        <div id="auth-message" class="message" role="status" aria-live="polite"></div>
+        <p class="privacy-note">Acceso protegido. Tus proyectos y tu API key permanecen bajo tu control.</p>
+      </section>
+    </main>
+    <script type="module" src="/auth.js"></script>
+    <script src="/background.js" defer></script>
+  </body>
+</html>

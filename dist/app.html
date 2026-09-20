@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#050816" />
+    <meta name="description" content="GisseleGeo: edición de imágenes y generación de video con WaveSpeedAI." />
+    <title>Estudio · GisseleGeo</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <canvas class="starfield" aria-hidden="true"></canvas>
+    <div class="nebula" aria-hidden="true"></div>
+
+    <header class="app-header glass-bar">
+      <a class="brand" href="/app.html">GisseleGeo</a>
+      <nav class="header-actions" aria-label="Cuenta">
+        <a id="admin-link" class="chip-button hidden" href="/admin.html">Administrar</a>
+        <span id="user-email" class="user-chip"></span>
+        <button id="signout" class="icon-button bordered" type="button" aria-label="Cerrar sesión">Salir</button>
+      </nav>
+    </header>
+
+    <main class="studio-shell">
+      <section class="studio-heading">
+        <div>
+          <p class="eyebrow">Estudio creativo</p>
+          <h1>Da vida a tu idea</h1>
+          <p>Edita una foto con Seedream o conviértela en video con Seedance.</p>
+        </div>
+        <span class="status-pill"><i></i> WaveSpeed conectado</span>
+      </section>
+
+      <div class="studio-grid">
+        <section class="generator-card glass-card neon-border" aria-labelledby="generator-title">
+          <h2 id="generator-title" class="sr-only">Generador</h2>
+          <div class="api-field">
+            <div class="label-row">
+              <label class="field-label" for="api-key">WaveSpeed API key</label>
+              <a href="https://wavespeed.ai/accesskey" target="_blank" rel="noopener noreferrer">Get a key ↗</a>
+            </div>
+            <div class="input-wrap key-wrap">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 8-8m-3 3 2 2m-5 1 2 2"/></svg>
+              <input id="api-key" type="password" autocomplete="off" spellcheck="false" placeholder="Pega aquí tu key" />
+              <button id="toggle-key" class="icon-button" type="button" aria-label="Mostrar API key">Ver</button>
+            </div>
+            <p class="helper-text"><span class="lock-dot">◆</span> Tu key se usa solo para esta sesión, no se guarda en ningún servidor.</p>
+          </div>
+
+          <div class="mode-toggle" role="radiogroup" aria-label="Modo de creación">
+            <button class="mode-option active" data-mode="edit" role="radio" aria-checked="true" type="button">
+              <span class="mode-icon">✦</span><span><strong>Editar imagen</strong><small>Seedream 5 Pro</small></span>
+            </button>
+            <button class="mode-option" data-mode="video" role="radio" aria-checked="false" type="button">
+              <span class="mode-icon">▶</span><span><strong>Generar video</strong><small>Seedance 2.5</small></span>
+            </button>
+          </div>
+
+          <label class="field-label" for="prompt">Describe lo que quieres crear</label>
+          <div class="prompt-wrap">
+            <textarea id="prompt" rows="6" maxlength="5000" placeholder="Ejemplo: mejora la iluminación, conserva la identidad y añade textura fotográfica realista..."></textarea>
+            <span id="prompt-count">0 / 5000</span>
+          </div>
+
+          <label class="field-label" for="reference-image">Imagen de referencia</label>
+          <label id="dropzone" class="dropzone" for="reference-image">
+            <input id="reference-image" type="file" accept="image/jpeg,image/png,image/webp" />
+            <span class="upload-orb">＋</span>
+            <strong>Sube una imagen</strong>
+            <small>JPG, PNG o WEBP · máximo 20 MB</small>
+            <img id="image-preview" class="hidden" alt="Vista previa de la imagen de referencia" />
+            <button id="remove-image" class="remove-file hidden" type="button">Quitar</button>
+          </label>
+
+          <div class="settings-grid">
+            <label><span>Calidad</span><select id="quality"><option value="1k">1K · rápida</option><option value="1.5k" selected>1.5K · equilibrada</option><option value="2k">2K · máxima</option></select></label>
+            <label id="ratio-field"><span>Formato</span><select id="aspect-ratio"><option value="">Original</option><option value="1:1">1:1</option><option value="4:5">4:5</option><option value="9:16" selected>9:16</option><option value="16:9">16:9</option></select></label>
+            <label id="duration-field" class="hidden"><span>Duración</span><select id="duration"><option value="5">5 segundos</option><option value="8">8 segundos</option><option value="10">10 segundos</option></select></label>
+          </div>
+
+          <button id="generate" class="button primary-button generate-button" type="button" disabled>
+            <span class="button-label">Generar</span><span class="spinner" aria-hidden="true"></span>
+          </button>
+          <div id="generation-message" class="message" role="status" aria-live="polite"></div>
+        </section>
+
+        <section class="results-column">
+          <article class="result-card glass-card neon-border" aria-labelledby="result-title">
+            <div class="card-title-row"><div><p class="eyebrow">Resultado</p><h2 id="result-title">Tu creación aparecerá aquí</h2></div><span id="result-status" class="status-pill muted">En espera</span></div>
+            <div id="result-empty" class="empty-result"><div class="empty-orb">✦</div><p>Cuando generes, podrás previsualizar y descargar el resultado desde aquí.</p></div>
+            <div id="result-media" class="result-media hidden"></div>
+            <a id="download-result" class="button secondary-button hidden" href="#" target="_blank" rel="noopener" download>Descargar resultado</a>
+          </article>
+
+          <article class="history-card glass-card" aria-labelledby="history-title">
+            <div class="card-title-row"><div><p class="eyebrow">Esta sesión</p><h2 id="history-title">Historial reciente</h2></div><button id="clear-history" class="text-button" type="button">Limpiar</button></div>
+            <div id="history-list" class="history-list"><p class="empty-history">Aún no hay generaciones.</p></div>
+          </article>
+        </section>
+      </div>
+    </main>
+    <script type="module" src="/app.js"></script>
+    <script src="/background.js" defer></script>
+  </body>
+</html>
