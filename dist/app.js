@@ -18,11 +18,15 @@ async function api(action,payload={}){
 }
 
 async function uploadReference(file){
-  setBusy(true,'Subiendo imagen…'); setMessage('Preparando la imagen de referencia…');
-  const ticket=await api('upload-ticket',{file:{name:file.name,size:file.size,type:file.type}});
-  const response=await fetch(ticket.upload.url,{method:ticket.upload.method || 'PUT',headers:ticket.upload.headers,body:file});
-  if(!response.ok) throw new Error('No se pudo subir la imagen de referencia.');
-  return ticket.downloadUrl;
+  setBusy(true,'Subiendo imagen…'); setMessage('Subiendo la imagen de forma segura…');
+  const form=new FormData();
+  form.append('action','upload-proxy');
+  form.append('waveSpeedKey',keyInput.value.trim());
+  form.append('file',file,file.name);
+  const response=await fetch('/.netlify/functions/wavespeed-bridge',{method:'POST',headers:{'Authorization':`Bearer ${state.session.access_token}`},body:form});
+  const body=await response.json().catch(()=>({}));
+  if(!response.ok) throw new Error(body.error || `No se pudo subir la imagen (Error ${response.status}).`);
+  return body.downloadUrl;
 }
 
 async function poll(taskId){
@@ -50,7 +54,7 @@ function renderHistory(){
 }
 
 function useFile(file){
-  if(!file) return; if(!/^image\/(jpeg|png|webp)$/.test(file.type)){setMessage('Usa una imagen JPG, PNG o WEBP.','error');return;} if(file.size>20*1024*1024){setMessage('La imagen supera 20 MB.','error');return;}
+  if(!file) return; if(!/^image\/(jpeg|png|webp)$/.test(file.type)){setMessage('Usa una imagen JPG, PNG o WEBP.','error');return;} if(file.size>5*1024*1024){setMessage('La imagen supera 5 MB. Comprímela o elige una más pequeña.','error');return;}
   state.file=file; if(state.previewUrl) URL.revokeObjectURL(state.previewUrl); state.previewUrl=URL.createObjectURL(file); $('#image-preview').src=state.previewUrl; $('#image-preview').classList.remove('hidden'); $('#remove-image').classList.remove('hidden'); validate();
 }
 
