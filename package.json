@@ -1,0 +1,10 @@
+{
+  "name": "gisselegeo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check dist/auth.js && node --check dist/app.js && node --check dist/admin.js && node --check netlify/functions/wavespeed-bridge.mjs && node --check netlify/functions/admin.mjs",
+    "test": "node --test"
+  }
+}
